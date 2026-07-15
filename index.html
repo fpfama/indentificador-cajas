@@ -1,1 +1,419 @@
-file:///C:/Users/FRANCISCO/Downloads/identificador_cajas%20(2).html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identificador de Cajas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --kraft: #dbc79f;
+    --kraft-dark: #c3a878;
+    --kraft-deep: #a9865a;
+    --ink: #2c2318;
+    --ink-soft: #5a4c38;
+    --stamp-red: #b23a1f;
+    --stamp-green: #3f6b4a;
+    --paper: #f2e9d6;
+    --line: #8a6f47;
+    --shadow: rgba(44,35,24,0.25);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 2px, transparent 2px, transparent 14px),
+      var(--kraft);
+    color:var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    min-height:100vh;
+    padding:0 0 60px 0;
+  }
+  header{
+    padding:36px 20px 28px;
+    text-align:center;
+    border-bottom:4px solid var(--ink);
+    background:var(--kraft-dark);
+    position:relative;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:-4px;
+    height:4px;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 12px, transparent 12px 24px);
+  }
+  h1{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    font-size:clamp(28px,5vw,44px);
+    margin:0;
+  }
+  .subtitle{
+    margin-top:8px;
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 20px;
+  }
+  .panel{
+    background:var(--paper);
+    border:3px solid var(--ink);
+    box-shadow:6px 6px 0 var(--shadow);
+    margin-top:-2px;
+  }
+  .form-panel{
+    margin-top:32px;
+    padding:28px;
+  }
+  .form-title{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:18px;
+    font-weight:600;
+    margin:0 0 18px 0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .form-title::before{
+    content:"";
+    width:10px;height:10px;
+    background:var(--stamp-red);
+    display:inline-block;
+    transform:rotate(45deg);
+  }
+  .fields{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:18px;
+  }
+  .field label{
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:12px 10px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:18px;
+    font-weight:600;
+    border:2px solid var(--ink);
+    background:#fffdf8;
+    color:var(--ink);
+  }
+  .field input:focus{
+    outline:none;
+    border-color:var(--stamp-red);
+    background:#fff;
+  }
+  .unit-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+    font-size:13px;
+  }
+  .unit-row span{color:var(--ink-soft); text-transform:uppercase; letter-spacing:1px; font-size:11px;}
+  .toggle{
+    display:flex;
+    border:2px solid var(--ink);
+    overflow:hidden;
+  }
+  .toggle button{
+    border:none;
+    background:#fffdf8;
+    padding:8px 18px;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .toggle button.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .search-btn{
+    width:100%;
+    padding:16px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    font-weight:600;
+    font-size:16px;
+    cursor:pointer;
+    transition:background 0.15s;
+  }
+  .search-btn:hover{background:var(--stamp-red);}
+  .search-btn:active{transform:translateY(1px);}
+
+  .results{
+    margin-top:28px;
+  }
+  .results-count{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+    padding-left:4px;
+  }
+  .card{
+    background:#fffdf8;
+    border:2px solid var(--ink);
+    margin-bottom:16px;
+    padding:0;
+    position:relative;
+    box-shadow:4px 4px 0 var(--shadow);
+    display:flex;
+    flex-wrap:wrap;
+  }
+  .card.exact{ border-color: var(--stamp-green); }
+
+  .card-main{
+    flex:1 1 260px;
+    padding:20px 22px;
+    border-right:2px dashed var(--line);
+  }
+  .card-code{
+    font-size:11px;
+    letter-spacing:2px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .card-name{
+    font-family:'Oswald',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    margin:4px 0 10px 0;
+  }
+  .card-tags{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  .tag{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:3px 8px;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+  }
+  .card-dims{
+    flex:0 0 210px;
+    padding:20px 22px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:6px;
+  }
+  .dim-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    border-bottom:1px dotted var(--line);
+    padding-bottom:6px;
+  }
+  .dim-row .lbl{color:var(--ink-soft); text-transform:uppercase; font-size:11px; letter-spacing:1px; flex:0 0 auto;}
+  .dim-row .right{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    line-height:1.3;
+  }
+  .dim-row .val{font-weight:700; white-space:nowrap;}
+  .dim-row .diff{font-size:11px; color:var(--stamp-red); white-space:nowrap;}
+  .dim-row .diff.zero{color:var(--stamp-green);}
+
+  .empty{
+    text-align:center;
+    padding:50px 20px;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+  .empty b{color:var(--ink);}
+
+  footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:600px){
+    .fields{grid-template-columns:1fr;}
+    .card-dims{border-right:none;}
+    .card-main{border-right:none; border-bottom:2px dashed var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Identificador de Cajas</h1>
+  <div class="subtitle">Busca por medidas montadas &middot; Ancho &times; Largo &times; Alto</div>
+</header>
+
+<div class="wrap">
+  <div class="panel form-panel">
+    <div class="form-title">Introduce las medidas</div>
+    <div class="fields">
+      <div class="field">
+        <label for="in-ancho">Ancho</label>
+        <input type="number" id="in-ancho" placeholder="0" step="any" min="0">
+      </div>
+      <div class="field">
+        <label for="in-largo">Largo</label>
+        <input type="number" id="in-largo" placeholder="0" step="any" min="0">
+      </div>
+      <div class="field">
+        <label for="in-alto">Alto</label>
+        <input type="number" id="in-alto" placeholder="0" step="any" min="0">
+      </div>
+    </div>
+    <div class="unit-row">
+      <span>Unidad</span>
+      <div class="toggle" id="unit-toggle">
+        <button data-unit="mm" class="active">mm</button>
+        <button data-unit="cm">cm</button>
+      </div>
+    </div>
+    <button class="search-btn" id="search-btn">Buscar caja</button>
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <footer>154 modelos cargados desde el catálogo &middot; Coincidencia por medidas montadas, en cualquier orientación</footer>
+</div>
+
+<script>
+const BOXES = [{"modelo": "Almacén", "codigo": 23400002, "ancho_plano": 2775, "largo_plano": 926, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 800, "largo_cerrada": 560, "alto_cerrado": 360, "tipologia": "201 / 202", "palet_ancho": 926, "palet_alto": 1360, "impresion": "No"}, {"modelo": "Modelo Moon", "codigo": 23400008, "ancho_plano": 4095, "largo_plano": 1647, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 1085, "largo_cerrada": 935, "alto_cerrado": 705, "tipologia": "201 / 202", "palet_ancho": 1647, "palet_alto": 2020, "impresion": "Muy Fragil --> "}, {"modelo": "Tapa sofá mod. Miami y Óscar", "codigo": 23400015, "ancho_plano": 970, "largo_plano": 1200, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 690, "largo_cerrada": 140, "alto_cerrado": 920, "tipologia": "300 / 306 Tapa rara", "palet_ancho": 1200, "palet_alto": 830, "impresion": "No"}, {"modelo": "Mesa mod. Dolce Vitta", "codigo": 23400016, "ancho_plano": 2945, "largo_plano": 957, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 915, "largo_cerrada": 535, "alto_cerrado": 415, "tipologia": "201 / 202", "palet_ancho": 957, "palet_alto": 1450, "impresion": "No"}, {"modelo": "Plancha 60x50", "codigo": 23400025, "ancho_plano": 500, "largo_plano": 600, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 500, "largo_cerrada": 0, "alto_cerrado": 600, "tipologia": "Plancha", "palet_ancho": 600, "palet_alto": 500, "impresion": "No"}, {"modelo": "Tapa sofá mod. Odin", "codigo": 23400035, "ancho_plano": 1010, "largo_plano": 1200, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 730, "largo_cerrada": 140, "alto_cerrado": 920, "tipologia": "Caja rara", "palet_ancho": 1200, "palet_alto": 870, "impresion": "No"}, {"modelo": "Sillón mod. Naoko", "codigo": 23400037, "ancho_plano": 2825, "largo_plano": 1226, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 1030, "largo_cerrada": 360, "alto_cerrado": 860, "tipologia": "201 / 202", "palet_ancho": 1226, "palet_alto": 1390, "impresion": "Habitat + Naoko "}, {"modelo": "Puff mod. Naoko", "codigo": 23400038, "ancho_plano": 1375, "largo_plano": 666, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 460, "largo_cerrada": 200, "alto_cerrado": 460, "tipologia": "201 / 202", "palet_ancho": 666, "palet_alto": 660, "impresion": "Habitat + Naoko "}, {"modelo": "Cabecerilla sillón", "codigo": 23400046, "ancho_plano": 1000, "largo_plano": 950, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 500, "largo_cerrada": 0, "alto_cerrado": 950, "tipologia": "Similar 409 Irregular", "palet_ancho": 950, "palet_alto": 500, "impresion": "No"}, {"modelo": "Tapa mesa mod. Elsa", "codigo": 23400053, "ancho_plano": 1610, "largo_plano": 1110, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1610, "largo_cerrada": 0, "alto_cerrado": 1110, "tipologia": "Caja rara y curva", "palet_ancho": 1110, "palet_alto": 1610, "impresion": "No"}, {"modelo": "Tapa mesa mod. Carol", "codigo": 23400054, "ancho_plano": 1350, "largo_plano": 1350, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1410, "largo_cerrada": 0, "alto_cerrado": 1410, "tipologia": "Caja rara", "palet_ancho": 1350, "palet_alto": 1410, "impresion": "No"}, {"modelo": "Tapa mesa mod. Otis", "codigo": 23400057, "ancho_plano": 1610, "largo_plano": 1110, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1610, "largo_cerrada": 0, "alto_cerrado": 1110, "tipologia": "Caja rara y curva", "palet_ancho": 1110, "palet_alto": 1610, "impresion": "No"}, {"modelo": "Tapa mesa mod. Adam 96", "codigo": 23400058, "ancho_plano": 1310, "largo_plano": 1310, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1310, "largo_cerrada": 0, "alto_cerrado": 1310, "tipologia": "Similar tapa", "palet_ancho": 1310, "palet_alto": 1310, "impresion": "No"}, {"modelo": "Tapa mesa mod. Adam 110", "codigo": 23400060, "ancho_plano": 1450, "largo_plano": 950, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1510, "largo_cerrada": 0, "alto_cerrado": 1010, "tipologia": "Simil tapa sin pestañas", "palet_ancho": 950, "palet_alto": 1510, "impresion": "No"}, {"modelo": "Tapa mod. Caracola-Agatha y Melibea", "codigo": 23400063, "ancho_plano": 1210, "largo_plano": 1010, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 1210, "largo_cerrada": 0, "alto_cerrado": 1010, "tipologia": "Caja rara", "palet_ancho": 1010, "palet_alto": 1210, "impresion": "No"}, {"modelo": "Tapa mesa mod. Luna y Sole", "codigo": 23400065, "ancho_plano": 1350, "largo_plano": 1350, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 1350, "largo_cerrada": 0, "alto_cerrado": 1350, "tipologia": "Cajar rara y curva", "palet_ancho": 1350, "palet_alto": 1350, "impresion": "No"}, {"modelo": "Tapa cartón genérica sillones", "codigo": 23400068, "ancho_plano": 1490, "largo_plano": 1490, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 149, "largo_cerrada": 0, "alto_cerrado": 149, "tipologia": "310 Botton", "palet_ancho": 1490, "palet_alto": 149, "impresion": "No"}, {"modelo": "Cantonera esquinera C5", "codigo": 23400069, "ancho_plano": 260, "largo_plano": 260, "calidad": "BICO/P/BICO C", "ancho_cerrada": 130, "largo_cerrada": 130, "alto_cerrado": 130, "tipologia": "Carton", "palet_ancho": 260, "palet_alto": 260, "impresion": "No"}, {"modelo": "Arianne Garden", "codigo": 23400071, "ancho_plano": 3255, "largo_plano": 1321, "calidad": "KB5 3P4 K3 BC", "ancho_cerrada": 840, "largo_cerrada": 760, "alto_cerrado": 555, "tipologia": "201 / 202", "palet_ancho": 1321, "palet_alto": 1600, "impresion": "Arianne garden + muy fragil -->"}, {"modelo": "Klee 5 - Banco Ginos Box Forma", "codigo": 23400073, "ancho_plano": 3920, "largo_plano": 1986, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 1225, "largo_cerrada": 685, "alto_cerrado": 950, "tipologia": "Caja rara", "palet_ancho": 1986, "palet_alto": 1910, "impresion": "No"}, {"modelo": "Marcel Otis", "codigo": 23400074, "ancho_plano": 1225, "largo_plano": 500, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 530, "largo_cerrada": 55, "alto_cerrado": 390, "tipologia": "Simil tapa ", "palet_ancho": 500, "palet_alto": 585, "impresion": "No"}, {"modelo": "Caja Starbucks Pie Varilla", "codigo": 23400083, "ancho_plano": 1733, "largo_plano": 1720, "calidad": "K7 SQ7 K7 B", "ancho_cerrada": 1800, "largo_cerrada": 0, "alto_cerrado": 1800, "tipologia": "Rara (Mucho desaprovechamiento)", "palet_ancho": 1720, "palet_alto": 1800, "impresion": "No"}, {"modelo": "Cantonera mod. Wild Confort", "codigo": 23400085, "ancho_plano": 947, "largo_plano": 260, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 725, "largo_cerrada": 170, "alto_cerrado": 110, "tipologia": "cartón raro", "palet_ancho": 260, "palet_alto": 895, "impresion": "No"}, {"modelo": "Archivador Bandeja interior", "codigo": 23400087, "ancho_plano": 868, "largo_plano": 502, "calidad": "B5 SQ3 B5 C", "ancho_cerrada": 347, "largo_cerrada": 249, "alto_cerrado": 123, "tipologia": "simil 0454 con asa", "palet_ancho": 502, "palet_alto": 596, "impresion": "No"}, {"modelo": "Archivador Exterior", "codigo": 23400088, "ancho_plano": 1712, "largo_plano": 842, "calidad": "B5 SQ3 B5 C", "ancho_cerrada": 257, "largo_cerrada": 269, "alto_cerrado": 353, "tipologia": "Caja rara", "palet_ancho": 842, "palet_alto": 526, "impresion": "No"}, {"modelo": "Plancha rfa. 2 - 135x1100", "codigo": 23400097, "ancho_plano": 1100, "largo_plano": 270, "calidad": "K7 SQ7 K7 E", "ancho_cerrada": 1100, "largo_cerrada": 0, "alto_cerrado": 270, "tipologia": "Carton", "palet_ancho": 270, "palet_alto": 1100, "impresion": "No"}, {"modelo": "Plancha rfa. 7 Arianne 165x870", "codigo": 23400100, "ancho_plano": 870, "largo_plano": 165, "calidad": "K7 SQ7 K7 E", "ancho_cerrada": 870, "largo_cerrada": 0, "alto_cerrado": 165, "tipologia": "Cartón", "palet_ancho": 165, "palet_alto": 870, "impresion": "No"}, {"modelo": "Plancha 800x1200 K22", "codigo": 23400110, "ancho_plano": 1200, "largo_plano": 800, "calidad": "K225-SQ7-K225 E", "ancho_cerrada": 1200, "largo_cerrada": 0, "alto_cerrado": 800, "tipologia": "Cartón", "palet_ancho": 800, "palet_alto": 1200, "impresion": "No"}, {"modelo": "Arianne 970x780 K22", "codigo": 23400111, "ancho_plano": 780, "largo_plano": 970, "calidad": "K225-SQ7-K225 E", "ancho_cerrada": 780, "largo_cerrada": 0, "alto_cerrado": 970, "tipologia": "Cartón", "palet_ancho": 970, "palet_alto": 780, "impresion": "No"}, {"modelo": "Sofá Armless Box Forma", "codigo": 23400112, "ancho_plano": 5030, "largo_plano": 1780, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 1685, "largo_cerrada": 740, "alto_cerrado": 755, "tipologia": "Rara", "palet_ancho": 1780, "palet_alto": 2425, "impresion": "No"}, {"modelo": "Cantonera Pacific", "codigo": 23400114, "ancho_plano": 1210, "largo_plano": 145, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 950, "largo_cerrada": 95, "alto_cerrado": 50, "tipologia": "Rara", "palet_ancho": 145, "palet_alto": 1045, "impresion": "No"}, {"modelo": "Patas mesas Pop", "codigo": 23400123, "ancho_plano": 2950, "largo_plano": 915, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 2950, "largo_cerrada": 915, "alto_cerrado": 0, "tipologia": "9 dobleces", "palet_ancho": 915, "palet_alto": 3865, "impresion": "No"}, {"modelo": "Caja patas Kangou", "codigo": 23400128, "ancho_plano": 855, "largo_plano": 1035, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 285, "largo_cerrada": 115, "alto_cerrado": 805, "tipologia": "201 / 202", "palet_ancho": 1035, "palet_alto": 400, "impresion": "No"}, {"modelo": "Sofá Cama Indy 2m. asas", "codigo": 23400133, "ancho_plano": 5220, "largo_plano": 2060, "calidad": "K30 SQN8 K8 SQN8 K30 BC", "ancho_cerrada": 2090, "largo_cerrada": 470, "alto_cerrado": 1120, "tipologia": "201 / 202 rara", "palet_ancho": 2060, "palet_alto": 2560, "impresion": "Indy + agujeros"}, {"modelo": "Patas Astoria", "codigo": 23400135, "ancho_plano": 965, "largo_plano": 376, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 245, "largo_cerrada": 210, "alto_cerrado": 160, "tipologia": "201 / 202", "palet_ancho": 376, "palet_alto": 455, "impresion": "No"}, {"modelo": "Mili & Lalo 2 sillas montadas", "codigo": 23400136, "ancho_plano": 2405, "largo_plano": 1507, "calidad": 23, "ancho_cerrada": 670, "largo_cerrada": 505, "alto_cerrado": 995, "tipologia": "201 / 202", "palet_ancho": 1507, "palet_alto": 1175, "impresion": "No"}, {"modelo": "Elementos Pacific", "codigo": 23400137, "ancho_plano": 3115, "largo_plano": 1537, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 865, "largo_cerrada": 665, "alto_cerrado": 865, "tipologia": "201 / 202 rara", "palet_ancho": 1537, "palet_alto": 1530, "impresion": "No"}, {"modelo": "Taburete Vips", "codigo": 23400139, "ancho_plano": 2235, "largo_plano": 1622, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 570, "largo_cerrada": 520, "alto_cerrado": 1090, "tipologia": "201 / 202 rara", "palet_ancho": 1622, "palet_alto": 1090, "impresion": "No"}, {"modelo": "Conectable", "codigo": 23400140, "ancho_plano": 1565, "largo_plano": 910, "calidad": "BICO/3P/BICO BC", "ancho_cerrada": 610, "largo_cerrada": 450, "alto_cerrado": 610, "tipologia": "rara", "palet_ancho": 910, "palet_alto": 1060, "impresion": "No"}, {"modelo": "Bertha Lounge Chair Starbucks BForma", "codigo": 23400141, "ancho_plano": 3350, "largo_plano": 1945, "calidad": "K3/3P4/K3 BC", "ancho_cerrada": 740, "largo_cerrada": 885, "alto_cerrado": 845, "tipologia": "201 / 202 rara", "palet_ancho": 1945, "palet_alto": 1625, "impresion": "No"}, {"modelo": "Lounge outdoor chair BForma", "codigo": 23400145, "ancho_plano": 3020, "largo_plano": 1703, "calidad": 13, "ancho_cerrada": 720, "largo_cerrada": 740, "alto_cerrado": 745, "tipologia": "Rara", "palet_ancho": 1703, "palet_alto": 1460, "impresion": "No"}, {"modelo": "Banquete bajo Starbucks", "codigo": 23400146, "ancho_plano": 4825, "largo_plano": 1111, "calidad": 13, "ancho_cerrada": 1765, "largo_cerrada": 620, "alto_cerrado": 485, "tipologia": "201 / 202", "palet_ancho": 1111, "palet_alto": 2385, "impresion": "No"}, {"modelo": "Lecanap cuerpo", "codigo": 23400147, "ancho_plano": 2270, "largo_plano": 1210, "calidad": 13, "ancho_cerrada": 670, "largo_cerrada": 440, "alto_cerrado": 770, "tipologia": "Rara", "palet_ancho": 1210, "palet_alto": 1110, "impresion": "No"}, {"modelo": "Tall Round Stool Starbucks", "codigo": 23400148, "ancho_plano": 1705, "largo_plano": 956, "calidad": 13, "ancho_cerrada": 415, "largo_cerrada": 410, "alto_cerrado": 540, "tipologia": "201 / 202", "palet_ancho": 956, "palet_alto": 825, "impresion": "No"}, {"modelo": "Cantonera L 32-3mm-2000", "codigo": 23400149, "ancho_plano": 2000, "largo_plano": 64, "calidad": 174, "ancho_cerrada": 2000, "largo_cerrada": 32, "alto_cerrado": 32, "tipologia": "carton doblado", "palet_ancho": 64, "palet_alto": 2032, "impresion": "No"}, {"modelo": "Silloncitos", "codigo": 23400153, "ancho_plano": 1775, "largo_plano": 886, "calidad": 1, "ancho_cerrada": 430, "largo_cerrada": 430, "alto_cerrado": 450, "tipologia": "201 / 202", "palet_ancho": 886, "palet_alto": 860, "impresion": "Home By FAMA"}, {"modelo": "Cabecero Elba", "codigo": 23400154, "ancho_plano": 1785, "largo_plano": 877, "calidad": 13, "ancho_cerrada": 635, "largo_cerrada": 235, "alto_cerrado": 635, "tipologia": "201 / 202", "palet_ancho": 877, "palet_alto": 870, "impresion": "No"}, {"modelo": "Sofá cama Indy 1,90m. asas", "codigo": 23400156, "ancho_plano": 5020, "largo_plano": 2060, "calidad": "K30 SQN8 K8 SQN8 K30 BC", "ancho_cerrada": 1990, "largo_cerrada": 470, "alto_cerrado": 1120, "tipologia": "201 / 202", "palet_ancho": 2060, "palet_alto": 2460, "impresion": "No"}, {"modelo": "Plancha protectora Sillón Acajou", "codigo": 23400157, "ancho_plano": 745, "largo_plano": 690, "calidad": "K8 SQN3 P4 SQN8 K5 BC", "ancho_cerrada": 745, "largo_cerrada": 0, "alto_cerrado": 690, "tipologia": "Cartón", "palet_ancho": 690, "palet_alto": 745, "impresion": "No"}, {"modelo": "Mesa mod. Luke troquelada", "codigo": 23400158, "ancho_plano": 2165, "largo_plano": 1135, "calidad": 1, "ancho_cerrada": 745, "largo_cerrada": 85, "alto_cerrado": 605, "tipologia": "Rara", "palet_ancho": 1135, "palet_alto": 830, "impresion": "No"}, {"modelo": "Mueble Tv 2018", "codigo": 23400159, "ancho_plano": 3265, "largo_plano": 2050, "calidad": 23, "ancho_cerrada": 1390, "largo_cerrada": 215, "alto_cerrado": 1620, "tipologia": "201 / 202", "palet_ancho": 2050, "palet_alto": 1605, "impresion": "No"}, {"modelo": "Lecanap puff", "codigo": 23400161, "ancho_plano": 2045, "largo_plano": 1002, "calidad": 13, "ancho_cerrada": 680, "largo_cerrada": 315, "alto_cerrado": 680, "tipologia": "201 / 202", "palet_ancho": 1002, "palet_alto": 995, "impresion": "No"}, {"modelo": "Lecanap brazos", "codigo": 23400162, "ancho_plano": 2865, "largo_plano": 891, "calidad": 13, "ancho_cerrada": 925, "largo_cerrada": 480, "alto_cerrado": 415, "tipologia": "Rara", "palet_ancho": 891, "palet_alto": 1405, "impresion": "No"}, {"modelo": "Sillones mod. Siddy", "codigo": 23400164, "ancho_plano": 2535, "largo_plano": 1501, "calidad": 13, "ancho_cerrada": 730, "largo_cerrada": 510, "alto_cerrado": 985, "tipologia": "201 / 202", "palet_ancho": 1501, "palet_alto": 1240, "impresion": "No"}, {"modelo": "Sillón mod. Siddy 1 unidad BForma", "codigo": 23400165, "ancho_plano": 2340, "largo_plano": 2143, "calidad": 13, "ancho_cerrada": 530, "largo_cerrada": 590, "alto_cerrado": 1040, "tipologia": "Rara", "palet_ancho": 2143, "palet_alto": 1120, "impresion": "No"}, {"modelo": "Lámpara pared Vips", "codigo": 23400169, "ancho_plano": 675, "largo_plano": 855, "calidad": 1, "ancho_cerrada": 195, "largo_cerrada": 115, "alto_cerrado": 625, "tipologia": "201 / 202", "palet_ancho": 855, "palet_alto": 310, "impresion": "No"}, {"modelo": "Sofá cama mod. Bruno", "codigo": 23400172, "ancho_plano": 4315, "largo_plano": 1206, "calidad": 13, "ancho_cerrada": 1650, "largo_cerrada": 480, "alto_cerrado": 720, "tipologia": "201 / 202", "palet_ancho": 1206, "palet_alto": 2130, "impresion": "No"}, {"modelo": "Taburete mod. Denzel, Marlon, Helga", "codigo": 23400176, "ancho_plano": 2135, "largo_plano": 1282, "calidad": 13, "ancho_cerrada": 570, "largo_cerrada": 475, "alto_cerrado": 845, "tipologia": "Rara", "palet_ancho": 1282, "palet_alto": 1045, "impresion": "No"}, {"modelo": "Estantería Mix", "codigo": 23400178, "ancho_plano": 1415, "largo_plano": 2285, "calidad": 38, "ancho_cerrada": 440, "largo_cerrada": 240, "alto_cerrado": 1805, "tipologia": "201 / 202", "palet_ancho": 2285, "palet_alto": 680, "impresion": "No"}, {"modelo": "Módulo Atlanta 4 plazas asas", "codigo": 23400181, "ancho_plano": 3225, "largo_plano": 1537, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 595, "alto_cerrado": 935, "tipologia": "201 / 202", "palet_ancho": 1537, "palet_alto": 1585, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "Módulo Atlanta 3 plazas asas", "codigo": 23400182, "ancho_plano": 3225, "largo_plano": 1387, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 595, "alto_cerrado": 785, "tipologia": "201 / 202", "palet_ancho": 1387, "palet_alto": 1585, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "Módulo Atlanta 2 plazas asas", "codigo": 23400183, "ancho_plano": 3225, "largo_plano": 1242, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 595, "alto_cerrado": 640, "tipologia": "201 / 202", "palet_ancho": 1242, "palet_alto": 1585, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "Asientos y respaldos sofá mod. Klee 250", "codigo": 23400184, "ancho_plano": 3195, "largo_plano": 1347, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 575, "alto_cerrado": 765, "tipologia": "201 / 202", "palet_ancho": 1347, "palet_alto": 1570, "impresion": "Klee & Klever by fama"}, {"modelo": "Brazos sofá mod. Klee 250", "codigo": 23400185, "ancho_plano": 2655, "largo_plano": 1605, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 305, "alto_cerrado": 995, "tipologia": "201 / 202", "palet_ancho": 1605, "palet_alto": 1300, "impresion": "Klee & Klever by fama"}, {"modelo": "2 Bases 120 cm sofá mod. Klee 250", "codigo": 23400186, "ancho_plano": 2755, "largo_plano": 1225, "calidad": 23, "ancho_cerrada": 1235, "largo_cerrada": 115, "alto_cerrado": 995, "tipologia": "201 / 202", "palet_ancho": 1225, "palet_alto": 1350, "impresion": "Klee & Klever by fama"}, {"modelo": "2 Patas sofá mod. Klee 250", "codigo": 23400187, "ancho_plano": 615, "largo_plano": 1145, "calidad": 23, "ancho_cerrada": 165, "largo_cerrada": 115, "alto_cerrado": 915, "tipologia": "201 / 202", "palet_ancho": 1145, "palet_alto": 280, "impresion": "No"}, {"modelo": "2 Brazos mod. Jazz y Sunset", "codigo": 23400188, "ancho_plano": 2715, "largo_plano": 877, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 335, "alto_cerrado": 535, "tipologia": "201 / 202", "palet_ancho": 877, "palet_alto": 1330, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "2 Brazos mod. Wave y Dune", "codigo": 23400189, "ancho_plano": 3075, "largo_plano": 1137, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 515, "alto_cerrado": 615, "tipologia": "201 / 202 rara", "palet_ancho": 1137, "palet_alto": 1510, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "Mesa baja Klee", "codigo": 23400190, "ancho_plano": 2595, "largo_plano": 947, "calidad": 23, "ancho_cerrada": 745, "largo_cerrada": 525, "alto_cerrado": 415, "tipologia": "201 / 202 ", "palet_ancho": 947, "palet_alto": 1270, "impresion": "Klee & Klever by fama"}, {"modelo": "Asientos y respaldos sofá Klee 202", "codigo": 23400191, "ancho_plano": 2635, "largo_plano": 1347, "calidad": 23, "ancho_cerrada": 715, "largo_cerrada": 575, "alto_cerrado": 765, "tipologia": "201 / 202", "palet_ancho": 1347, "palet_alto": 1290, "impresion": "Klee & Klever by fama"}, {"modelo": "Relax mod. Adán y Eva", "codigo": 23400192, "ancho_plano": 4115, "largo_plano": 1707, "calidad": 13, "ancho_cerrada": 1045, "largo_cerrada": 985, "alto_cerrado": 715, "tipologia": "201 / 202", "palet_ancho": 1707, "palet_alto": 2030, "impresion": "Muy Fragil --> "}, {"modelo": "Relax mod. Nadia", "codigo": 23400193, "ancho_plano": 3815, "largo_plano": 1567, "calidad": 13, "ancho_cerrada": 1005, "largo_cerrada": 875, "alto_cerrado": 685, "tipologia": "201 / 202", "palet_ancho": 1567, "palet_alto": 1880, "impresion": "Muy Fragil --> "}, {"modelo": "Sofá mod. Melchior 2 plazas", "codigo": 23400194, "ancho_plano": 5295, "largo_plano": 1672, "calidad": 13, "ancho_cerrada": 1675, "largo_cerrada": 945, "alto_cerrado": 720, "tipologia": null, "palet_ancho": 1672, "palet_alto": 2620, "impresion": "Muy Fragil --> "}, {"modelo": "Sofá mod. Melchior 3 plazas", "codigo": 23400195, "ancho_plano": 3130, "largo_plano": 1672, "calidad": 13, "ancho_cerrada": 2085, "largo_cerrada": 945, "alto_cerrado": 720, "tipologia": null, "palet_ancho": 1672, "palet_alto": 3030, "impresion": "Muy Fragil --> "}, {"modelo": "Round Stool XL Starbucks", "codigo": 23400196, "ancho_plano": 2325, "largo_plano": 1046, "calidad": 13, "ancho_cerrada": 570, "largo_cerrada": 570, "alto_cerrado": 470, "tipologia": null, "palet_ancho": 1046, "palet_alto": 1140, "impresion": "No"}, {"modelo": "Caja mascarilla 415x270x540", "codigo": 23400197, "ancho_plano": 1425, "largo_plano": 814, "calidad": 19, "ancho_cerrada": 415, "largo_cerrada": 270, "alto_cerrado": 540, "tipologia": null, "palet_ancho": 814, "palet_alto": 685, "impresion": "No"}, {"modelo": "Caja mascarilla 415x270x200", "codigo": 23400198, "ancho_plano": 1285, "largo_plano": 474, "calidad": 19, "ancho_cerrada": 415, "largo_cerrada": 200, "alto_cerrado": 270, "tipologia": null, "palet_ancho": 474, "palet_alto": 615, "impresion": "No"}, {"modelo": "Patas mod. Nap st", "codigo": 23400199, "ancho_plano": 815, "largo_plano": 1185, "calidad": 23, "ancho_cerrada": 235, "largo_cerrada": 145, "alto_cerrado": 895, "tipologia": "201 / 202", "palet_ancho": 1185, "palet_alto": 380, "impresion": "No"}, {"modelo": "2 Bases mod. Nap std", "codigo": 23400200, "ancho_plano": 3095, "largo_plano": 1420, "calidad": 23, "ancho_cerrada": 1355, "largo_cerrada": 165, "alto_cerrado": 1090, "tipologia": "201 / 202", "palet_ancho": 1420, "palet_alto": 1520, "impresion": "Gamadecor"}, {"modelo": "Respaldo y asiento 4p + Almohada mod. Nap", "codigo": 23400201, "ancho_plano": 3835, "largo_plano": 1491, "calidad": 23, "ancho_cerrada": 1070, "largo_cerrada": 820, "alto_cerrado": 665, "tipologia": "201 / 202", "palet_ancho": 1491, "palet_alto": 1890, "impresion": "Gamadecor"}, {"modelo": "Respaldo y asiento 3p + Almohada mod. Nap", "codigo": 23400202, "ancho_plano": 3315, "largo_plano": 1481, "calidad": 23, "ancho_cerrada": 820, "largo_cerrada": 810, "alto_cerrado": 665, "tipologia": "201 / 202", "palet_ancho": 1481, "palet_alto": 1630, "impresion": "Gamadecor"}, {"modelo": "Nap 2 PL - Fold B,R - Seems rincon Y  ", "codigo": 23400203, "ancho_plano": 4395, "largo_plano": 1757, "calidad": 23, "ancho_cerrada": 1085, "largo_cerrada": 1085, "alto_cerrado": 665, "tipologia": "201 / 202", "palet_ancho": 1757, "palet_alto": 2170, "impresion": "Gamadecor"}, {"modelo": "2 brazos + 2 cojines mod. Nap", "codigo": 23400204, "ancho_plano": 3355, "largo_plano": 1012, "calidad": 23, "ancho_cerrada": 1095, "largo_cerrada": 555, "alto_cerrado": 450, "tipologia": "201 / 202", "palet_ancho": 1012, "palet_alto": 1650, "impresion": "Gamadecor"}, {"modelo": "1 brazo + 1 cojín mod. Nap", "codigo": 23400205, "ancho_plano": 2815, "largo_plano": 1020, "calidad": 23, "ancho_cerrada": 1095, "largo_cerrada": 285, "alto_cerrado": 450, "tipologia": "201 / 202", "palet_ancho": 1020, "palet_alto": 1380, "impresion": "Gamadecor"}, {"modelo": "Brazos sofá mod. Avalon", "codigo": 23400206, "ancho_plano": 2635, "largo_plano": 1320, "calidad": 23, "ancho_cerrada": 980, "largo_cerrada": 310, "alto_cerrado": 700, "tipologia": null, "palet_ancho": 1320, "palet_alto": 1290, "impresion": "Atlanta & Baltia by fama"}, {"modelo": "Sillón mod. Kim Box Forma", "codigo": 23400209, "ancho_plano": 3420, "largo_plano": 2323, "calidad": 1, "ancho_cerrada": 880, "largo_cerrada": 780, "alto_cerrado": 1070, "tipologia": null, "palet_ancho": 2323, "palet_alto": 1660, "impresion": "No"}, {"modelo": "Taco mod. Moon", "codigo": 23400210, "ancho_plano": 920, "largo_plano": 1029, "calidad": 23, "ancho_cerrada": 920, "largo_cerrada": 1060, "alto_cerrado": 0, "tipologia": null, "palet_ancho": 1029, "palet_alto": 1980, "impresion": "No"}, {"modelo": "Caja culos + asas", "codigo": 23400211, "ancho_plano": 2885, "largo_plano": 743, "calidad": 13, "ancho_cerrada": 1135, "largo_cerrada": 280, "alto_cerrado": 600, "tipologia": null, "palet_ancho": 743, "palet_alto": 1415, "impresion": "No"}, {"modelo": "Caja automontable patas Avalon", "codigo": 23400212, "ancho_plano": 755, "largo_plano": 686.7, "calidad": 34, "ancho_cerrada": 180, "largo_cerrada": 173, "alto_cerrado": 140, "tipologia": null, "palet_ancho": 686.7, "palet_alto": 353, "impresion": "No"}, {"modelo": "Mecanismos", "codigo": 23400222, "ancho_plano": 2445, "largo_plano": 1336, "calidad": 38, "ancho_cerrada": 775, "largo_cerrada": 420, "alto_cerrado": 910, "tipologia": null, "palet_ancho": 1336, "palet_alto": 1195, "impresion": "No"}, {"modelo": "Caja culos pequeña + asas", "codigo": 23400223, "ancho_plano": 2585, "largo_plano": 743, "calidad": 13, "ancho_cerrada": 985, "largo_cerrada": 280, "alto_cerrado": 600, "tipologia": null, "palet_ancho": 743, "palet_alto": 1265, "impresion": "No"}, {"modelo": "Caja pié Kylian/Lenny", "codigo": 23400224, "ancho_plano": 1730, "largo_plano": 1050, "calidad": 23, "ancho_cerrada": 1730, "largo_cerrada": 970, "alto_cerrado": 0, "tipologia": null, "palet_ancho": 1050, "palet_alto": 2700, "impresion": "No"}, {"modelo": "Small Tray base 18642", "codigo": 23400225, "ancho_plano": 1235, "largo_plano": 717, "calidad": 13, "ancho_cerrada": 295, "largo_cerrada": 295, "alto_cerrado": 415, "tipologia": null, "palet_ancho": 717, "palet_alto": 590, "impresion": "No"}, {"modelo": "Medium Tray bae 18641", "codigo": 23400226, "ancho_plano": 1635, "largo_plano": 892, "calidad": 13, "ancho_cerrada": 395, "largo_cerrada": 395, "alto_cerrado": 490, "tipologia": null, "palet_ancho": 892, "palet_alto": 790, "impresion": "No"}, {"modelo": "Pill table mesa 19716", "codigo": 23400227, "ancho_plano": 2905, "largo_plano": 907, "calidad": 13, "ancho_cerrada": 940, "largo_cerrada": 485, "alto_cerrado": 415, "tipologia": null, "palet_ancho": 907, "palet_alto": 1425, "impresion": "No"}, {"modelo": "Sillón Mondrian", "codigo": 23400228, "ancho_plano": 3395, "largo_plano": 1472, "calidad": 23, "ancho_cerrada": 915, "largo_cerrada": 755, "alto_cerrado": 710, "tipologia": null, "palet_ancho": 1472, "palet_alto": 1670, "impresion": "No"}, {"modelo": "Brazo o puff pequeño Robert Sklum", "codigo": 23400229, "ancho_plano": 2365, "largo_plano": 1017, "calidad": 23, "ancho_cerrada": 785, "largo_cerrada": 375, "alto_cerrado": 635, "tipologia": null, "palet_ancho": 1017, "palet_alto": 1160, "impresion": "Sklum"}, {"modelo": "Módulo con brazo Robert Sklum", "codigo": 23400231, "ancho_plano": 2725, "largo_plano": 1247, "calidad": 23, "ancho_cerrada": 875, "largo_cerrada": 465, "alto_cerrado": 775, "tipologia": null, "palet_ancho": 1247, "palet_alto": 1340, "impresion": "Sklum"}, {"modelo": "Módulo puff grande y rincón Sklum metal", "codigo": 23400232, "ancho_plano": 2645, "largo_plano": 1281, "calidad": 23, "ancho_cerrada": 945, "largo_cerrada": 350, "alto_cerrado": 925, "tipologia": null, "palet_ancho": 1281, "palet_alto": 1295, "impresion": "Sklum"}, {"modelo": "Puff pequeño Sklum metal", "codigo": 23400233, "ancho_plano": 2605, "largo_plano": 1056, "calidad": 23, "ancho_cerrada": 925, "largo_cerrada": 350, "alto_cerrado": 700, "tipologia": null, "palet_ancho": 1056, "palet_alto": 1275, "impresion": "Sklum"}, {"modelo": "Cantonera L 32-3mm-2000", "codigo": 23400234, "ancho_plano": 2000, "largo_plano": 65, "calidad": 174, "ancho_cerrada": 2000, "largo_cerrada": 32, "alto_cerrado": 32, "tipologia": null, "palet_ancho": 65, "palet_alto": 2032, "impresion": "No"}, {"modelo": "Sofá 2 plazas Sklum", "codigo": 23400235, "ancho_plano": 4955, "largo_plano": 1577, "calidad": 23, "ancho_cerrada": 1815, "largo_cerrada": 635, "alto_cerrado": 935, "tipologia": null, "palet_ancho": 1577, "palet_alto": 2450, "impresion": "Sklum"}, {"modelo": "Escuadra Carton Mesas 10cm", "codigo": 23400236, "ancho_plano": 200, "largo_plano": 150, "calidad": 800, "ancho_cerrada": 200, "largo_cerrada": 30, "alto_cerrado": 60, "tipologia": "201 / 202", "palet_ancho": 150, "palet_alto": 230, "impresion": "No"}, {"modelo": "Cama + 1 brazo Sklum", "codigo": 23400237, "ancho_plano": 4685, "largo_plano": 1577, "calidad": 23, "ancho_cerrada": 1680, "largo_cerrada": 635, "alto_cerrado": 935, "tipologia": null, "palet_ancho": 1577, "palet_alto": 2315, "impresion": "Sklum"}, {"modelo": "Módulo fijo + 1 brazo Sklum", "codigo": 23400238, "ancho_plano": 3115, "largo_plano": 1577, "calidad": 23, "ancho_cerrada": 895, "largo_cerrada": 635, "alto_cerrado": 935, "tipologia": null, "palet_ancho": 1577, "palet_alto": 1530, "impresion": "Sklum"}, {"modelo": "Tapa Luna, Sole, Adam 96, Dorian 80/100", "codigo": 23400239, "ancho_plano": 2416, "largo_plano": 1582, "calidad": 1, "ancho_cerrada": 2450, "largo_cerrada": 1620, "alto_cerrado": 0, "tipologia": null, "palet_ancho": 1582, "palet_alto": 4070, "impresion": "No"}, {"modelo": "Sillón Mariel Sklum", "codigo": 23400240, "ancho_plano": 2305, "largo_plano": 1092, "calidad": 23, "ancho_cerrada": 740, "largo_cerrada": 385, "alto_cerrado": 700, "tipologia": null, "palet_ancho": 1092, "palet_alto": 1125, "impresion": "Sklum"}, {"modelo": "Sofa cama Bolero 160", "codigo": 23400242, "ancho_plano": 4960, "largo_plano": 1481, "calidad": 38, "ancho_cerrada": 1980, "largo_cerrada": 540, "alto_cerrado": 935, "tipologia": "201 / 202", "palet_ancho": 1481, "palet_alto": 2520, "impresion": "No"}, {"modelo": "Brazos Bolero", "codigo": 23400243, "ancho_plano": 2805, "largo_plano": 1027, "calidad": 23, "ancho_cerrada": 955, "largo_cerrada": 425, "alto_cerrado": 595, "tipologia": "201 / 202", "palet_ancho": 1027, "palet_alto": 1380, "impresion": "No"}, {"modelo": "Caja fondo automático patas 345x150x80", "codigo": 23400244, "ancho_plano": 1045, "largo_plano": 234, "calidad": 34, "ancho_cerrada": 345, "largo_cerrada": 150, "alto_cerrado": 80, "tipologia": "201 / 202", "palet_ancho": 234, "palet_alto": 495, "impresion": "No"}, {"modelo": "Escuadra Carton Mesas 6cm", "codigo": 23400245, "ancho_plano": 200, "largo_plano": 230, "calidad": 800, "ancho_cerrada": 200, "largo_cerrada": 30, "alto_cerrado": 100, "tipologia": null, "palet_ancho": 230, "palet_alto": 230, "impresion": "No"}, {"modelo": "Sofa cama Bolero 140", "codigo": 23400246, "ancho_plano": 4560, "largo_plano": 1481, "calidad": 38, "ancho_cerrada": 1690, "largo_cerrada": 540, "alto_cerrado": 935, "tipologia": "201 / 202", "palet_ancho": 1481, "palet_alto": 2230, "impresion": "No"}, {"modelo": "Sofa cama Bolero 80", "codigo": 23400247, "ancho_plano": 3360, "largo_plano": 1481, "calidad": 38, "ancho_cerrada": 1090, "largo_cerrada": 540, "alto_cerrado": 935, "tipologia": "201 / 202", "palet_ancho": 1481, "palet_alto": 1630, "impresion": "No"}, {"modelo": "Banquette 140 Starbucks Box Forma", "codigo": 23400248, "ancho_plano": 4230, "largo_plano": 1713, "calidad": 13, "ancho_cerrada": 1415, "largo_cerrada": 650, "alto_cerrado": 780, "tipologia": "201 / 202", "palet_ancho": 1713, "palet_alto": 2065, "impresion": "No"}, {"modelo": "Pill table Starbucks", "codigo": 23400250, "ancho_plano": 2925, "largo_plano": 911, "calidad": 13, "ancho_cerrada": 945, "largo_cerrada": 490, "alto_cerrado": 415, "tipologia": null, "palet_ancho": 911, "palet_alto": 1435, "impresion": "No"}, {"modelo": "Small tray base Starbucks", "codigo": 23400251, "ancho_plano": 1235, "largo_plano": 717, "calidad": 13, "ancho_cerrada": 295, "largo_cerrada": 295, "alto_cerrado": 415, "tipologia": null, "palet_ancho": 717, "palet_alto": 590, "impresion": "No"}, {"modelo": "Medium tray base Starbucks", "codigo": 23400252, "ancho_plano": 1655, "largo_plano": 896, "calidad": 13, "ancho_cerrada": 400, "largo_cerrada": 400, "alto_cerrado": 490, "tipologia": null, "palet_ancho": 896, "palet_alto": 800, "impresion": "No"}, {"modelo": "Módulo Marcon Sklum", "codigo": 23400253, "ancho_plano": 2685, "largo_plano": 1311, "calidad": 23, "ancho_cerrada": 920, "largo_cerrada": 400, "alto_cerrado": 905, "tipologia": null, "palet_ancho": 1311, "palet_alto": 1320, "impresion": "Sklum"}, {"modelo": "Puf Marcon Sklum", "codigo": 23400254, "ancho_plano": 2495, "largo_plano": 991, "calidad": 23, "ancho_cerrada": 925, "largo_cerrada": 300, "alto_cerrado": 685, "tipologia": null, "palet_ancho": 991, "palet_alto": 1225, "impresion": "Sklum"}, {"modelo": "Brazos Marcon Sklum", "codigo": 23400255, "ancho_plano": 2765, "largo_plano": 922, "calidad": 23, "ancho_cerrada": 925, "largo_cerrada": 435, "alto_cerrado": 480, "tipologia": null, "palet_ancho": 922, "palet_alto": 1360, "impresion": "Sklum"}, {"modelo": "Brazo 103 Korinto", "codigo": 23400256, "ancho_plano": 1455, "largo_plano": 1287, "calidad": 23, "ancho_cerrada": 465, "largo_cerrada": 235, "alto_cerrado": 1045, "tipologia": "201 / 202", "palet_ancho": 1287, "palet_alto": 700, "impresion": "No"}, {"modelo": "Almohada asiento 96 Korinto", "codigo": 23400257, "ancho_plano": 3175, "largo_plano": 1567, "calidad": 23, "ancho_cerrada": 975, "largo_cerrada": 585, "alto_cerrado": 975, "tipologia": "201 / 202", "palet_ancho": 1567, "palet_alto": 1560, "impresion": "No"}, {"modelo": "Bases 206 Korinto", "codigo": 23400258, "ancho_plano": 2335, "largo_plano": 2255, "calidad": 23, "ancho_cerrada": 1050, "largo_cerrada": 90, "alto_cerrado": 2075, "tipologia": "201 / 202", "palet_ancho": 2255, "palet_alto": 1140, "impresion": "No"}, {"modelo": "Bases pequeñas Korinto std", "codigo": 23400259, "ancho_plano": 2725, "largo_plano": 1350, "calidad": 23, "ancho_cerrada": 1185, "largo_cerrada": 150, "alto_cerrado": 1050, "tipologia": null, "palet_ancho": 1350, "palet_alto": 1335, "impresion": "No"}, {"modelo": "Asiento Sklum mod. Carly", "codigo": 23400260, "ancho_plano": 4925, "largo_plano": 1331, "calidad": "CAL0023", "ancho_cerrada": 925, "largo_cerrada": 435, "alto_cerrado": 480, "tipologia": null, "palet_ancho": 1331, "palet_alto": 1360, "impresion": "Sklum"}, {"modelo": "Respaldo + brazos Sklum mod. Carly", "codigo": 23400261, "ancho_plano": 4675, "largo_plano": 882, "calidad": "CAL0023", "ancho_cerrada": 2005, "largo_cerrada": 305, "alto_cerrado": 570, "tipologia": null, "palet_ancho": 882, "palet_alto": 2310, "impresion": "Sklum"}, {"modelo": "Modelo Super 8", "codigo": 23400262, "ancho_plano": 2625, "largo_plano": 1347, "calidad": 1, "ancho_cerrada": 715, "largo_cerrada": 575, "alto_cerrado": 765, "tipologia": "201 / 202", "palet_ancho": 1347, "palet_alto": 1290, "impresion": "No"}, {"modelo": "Tapa mesa mod. Elsa", "codigo": 23400263, "ancho_plano": 1735, "largo_plano": 1787, "calidad": 1, "ancho_cerrada": 1735, "largo_cerrada": 0, "alto_cerrado": 1787, "tipologia": "201 / 202", "palet_ancho": 1787, "palet_alto": 1735, "impresion": "No"}, {"modelo": "asientos 3-4  mod. Tempo-Korinto-Luxor ", "codigo": 23400264, "ancho_plano": 1815, "largo_plano": 1537, "calidad": 23, "ancho_cerrada": 835, "largo_cerrada": 545, "alto_cerrado": 985, "tipologia": "201 / 202", "palet_ancho": 1537, "palet_alto": 1380, "impresion": "No"}, {"modelo": "Asientos 3x-4x-5x mod. Tempo-Korinto", "codigo": 23400265, "ancho_plano": 3055, "largo_plano": 1637, "calidad": 23, "ancho_cerrada": 985, "largo_cerrada": 515, "alto_cerrado": 1115, "tipologia": "201 / 202", "palet_ancho": 1637, "palet_alto": 1500, "impresion": "No"}, {"modelo": "Bases grandes 171-234 mod. Tempo-Kori st", "codigo": 23400266, "ancho_plano": 2495, "largo_plano": 2285, "calidad": 23, "ancho_cerrada": 1115, "largo_cerrada": 105, "alto_cerrado": 2355, "tipologia": "201 / 202", "palet_ancho": 2285, "palet_alto": 1220, "impresion": "No"}, {"modelo": "Comple.bases grandes 171-234 mod. Tempo", "codigo": 23400267, "ancho_plano": 2575, "largo_plano": 505, "calidad": 23, "ancho_cerrada": 1135, "largo_cerrada": 125, "alto_cerrado": 380, "tipologia": "201 / 202", "palet_ancho": 505, "palet_alto": 1260, "impresion": "No"}, {"modelo": "Bases pequeñas 96-117 mod. Tempo Kori std", "codigo": 23400268, "ancho_plano": 2875, "largo_plano": 1425, "calidad": 23, "ancho_cerrada": 1255, "largo_cerrada": 155, "alto_cerrado": 1115, "tipologia": "201 / 202", "palet_ancho": 1425, "palet_alto": 1410, "impresion": "No"}, {"modelo": "Respaldos grande Tempo 164-220 st", "codigo": 23400269, "ancho_plano": 1750, "largo_plano": 2845, "calidad": 23, "ancho_cerrada": 515, "largo_cerrada": 295, "alto_cerrado": 2215, "tipologia": "201 / 202", "palet_ancho": 2845, "palet_alto": 810, "impresion": "No"}, {"modelo": "Respaldos pequeños Tempo 164-220  st", "codigo": 23400270, "ancho_plano": 1715, "largo_plano": 1755, "calidad": 23, "ancho_cerrada": 515, "largo_cerrada": 315, "alto_cerrado": 1115, "tipologia": "201 / 202", "palet_ancho": 1755, "palet_alto": 830, "impresion": "No"}, {"modelo": "Bazos mod. Seems", "codigo": 23400271, "ancho_plano": 3175, "largo_plano": 1117, "calidad": 23, "ancho_cerrada": 1005, "largo_cerrada": 555, "alto_cerrado": 555, "tipologia": "201 / 202", "palet_ancho": 1117, "palet_alto": 1560, "impresion": "No"}, {"modelo": "Módulos F-G mod. Seems", "codigo": 23400272, "ancho_plano": 4365, "largo_plano": 1801, "calidad": 23, "ancho_cerrada": 1565, "largo_cerrada": 590, "alto_cerrado": 1205, "tipologia": "201 / 202", "palet_ancho": 1801, "palet_alto": 2155, "impresion": "No"}, {"modelo": "Módulo Atlanta 4 plazas mod. Seems asas", "codigo": 23400273, "ancho_plano": 3225, "largo_plano": 1537, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 595, "alto_cerrado": 935, "tipologia": "201 / 202", "palet_ancho": 1537, "palet_alto": 1585, "impresion": "No"}, {"modelo": "Módulo Atlanta 3 plazas mod. Seems asas", "codigo": 23400274, "ancho_plano": 3225, "largo_plano": 1387, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 595, "alto_cerrado": 785, "tipologia": "201 / 202", "palet_ancho": 1387, "palet_alto": 1585, "impresion": "No"}, {"modelo": "Módulo Atlanta 2 plazas mod. Seems asas", "codigo": 23400275, "ancho_plano": 3215, "largo_plano": 1242, "calidad": 23, "ancho_cerrada": 990, "largo_cerrada": 598, "alto_cerrado": 640, "tipologia": "201 / 202", "palet_ancho": 1242, "palet_alto": 1588, "impresion": "No"}, {"modelo": "Módulo Bx y sillón mod. Fold", "codigo": 23400276, "ancho_plano": 3615, "largo_plano": 2107, "calidad": 23, "ancho_cerrada": 1095, "largo_cerrada": 685, "alto_cerrado": 1415, "tipologia": "201 / 202", "palet_ancho": 2107, "palet_alto": 1780, "impresion": "No"}, {"modelo": "Fold N – N, B, Rincón, sillón mod. Stripes", "codigo": 23400277, "ancho_plano": 2875, "largo_plano": 1417, "calidad": 23, "ancho_cerrada": 925, "largo_cerrada": 485, "alto_cerrado": 925, "tipologia": "201 / 202", "palet_ancho": 1417, "palet_alto": 1410, "impresion": "No"}, {"modelo": "Fold M - Stripes Bx,M", "codigo": 23400278, "ancho_plano": 3515, "largo_plano": 1417, "calidad": 23, "ancho_cerrada": 1245, "largo_cerrada": 485, "alto_cerrado": 925, "tipologia": "201 / 202", "palet_ancho": 1417, "palet_alto": 1730, "impresion": "No"}, {"modelo": "Sillones mod. Wings-Fluffy", "codigo": 23400279, "ancho_plano": 3755, "largo_plano": 1702, "calidad": 23, "ancho_cerrada": 975, "largo_cerrada": 875, "alto_cerrado": 820, "tipologia": null, "palet_ancho": 1702, "palet_alto": 1850, "impresion": "No"}, {"modelo": "Relax Lenny", "codigo": 23400280, "ancho_plano": 3825, "largo_plano": 1921, "calidad": 23, "ancho_cerrada": 1025, "largo_cerrada": 860, "alto_cerrado": 1055, "tipologia": "201 / 202", "palet_ancho": 1921, "palet_alto": 1885, "impresion": "No"}, {"modelo": "Sofa cama mod. Bruno 4 plazas ", "codigo": 23400281, "ancho_plano": 4715, "largo_plano": 1206, "calidad": 13, "ancho_cerrada": 1850, "largo_cerrada": 480, "alto_cerrado": 720, "tipologia": "201 / 202", "palet_ancho": 1206, "palet_alto": 2330, "impresion": "No"}, {"modelo": "Relax Lenny Box Forma", "codigo": 23400282, "ancho_plano": 3820, "largo_plano": 2373, "calidad": 23, "ancho_cerrada": 1040, "largo_cerrada": 860, "alto_cerrado": 1070, "tipologia": null, "palet_ancho": 2373, "palet_alto": 1900, "impresion": "No"}, {"modelo": "2 Brazos mod. Jazz y Sunset Anónima", "codigo": 23400283, "ancho_plano": 2715, "largo_plano": 877, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 335, "alto_cerrado": 535, "tipologia": "201 / 202", "palet_ancho": 877, "palet_alto": 1330, "impresion": "No"}, {"modelo": "2 Brazos mod. Wave y Dune Anónima", "codigo": 23400284, "ancho_plano": 3075, "largo_plano": 1137, "calidad": 23, "ancho_cerrada": 995, "largo_cerrada": 515, "alto_cerrado": 615, "tipologia": "201 / 202", "palet_ancho": 1137, "palet_alto": 1510, "impresion": "No"}, {"modelo": "Brazos sofá mod. Avalon Anónimos", "codigo": 23400285, "ancho_plano": 2635, "largo_plano": 1320, "calidad": 23, "ancho_cerrada": 980, "largo_cerrada": 310, "alto_cerrado": 700, "tipologia": "201 / 202", "palet_ancho": 1320, "palet_alto": 1290, "impresion": "No"}, {"modelo": "Caja Up Armchair Habitat", "codigo": 23400286, "ancho_plano": 2535, "largo_plano": 1365, "calidad": 13, "ancho_cerrada": 665, "largo_cerrada": 575, "alto_cerrado": 783, "tipologia": "201 / 202", "palet_ancho": 1365, "palet_alto": 1240, "impresion": "Muy Fragil --> "}, {"modelo": "Caja Delta Habitat", "codigo": 23400287, "ancho_plano": 3105, "largo_plano": 1446, "calidad": 13, "ancho_cerrada": 805, "largo_cerrada": 720, "alto_cerrado": 720, "tipologia": "201 / 202", "palet_ancho": 1446, "palet_alto": 1525, "impresion": "Muy Fragil --> "}, {"modelo": "Escuadra Carton Mesas 8cm", "codigo": 23400290, "ancho_plano": 200, "largo_plano": 190, "calidad": 800, "ancho_cerrada": 200, "largo_cerrada": 30, "alto_cerrado": 80, "tipologia": null, "palet_ancho": 190, "palet_alto": 230, "impresion": "No"}, {"modelo": "Columbia lounge chair Starbucks", "codigo": "klee", "ancho_plano": 2435, "largo_plano": 1372, "calidad": 13, "ancho_cerrada": 575, "largo_cerrada": 615, "alto_cerrado": 750, "tipologia": null, "palet_ancho": 1372, "palet_alto": 1190, "impresion": "No"}];
+
+let unit = 'mm';
+document.getElementById('unit-toggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  unit = btn.dataset.unit;
+  document.querySelectorAll('#unit-toggle button').forEach(b=>b.classList.toggle('active', b===btn));
+});
+
+function permutations(arr){
+  if(arr.length <= 1) return [arr];
+  const result = [];
+  for(let i=0;i<arr.length;i++){
+    const rest = arr.slice(0,i).concat(arr.slice(i+1));
+    for(const p of permutations(rest)){
+      result.push([arr[i], ...p]);
+    }
+  }
+  return result;
+}
+
+function bestMatch(box, target){
+  const boxDims = [box.ancho_cerrada, box.largo_cerrada, box.alto_cerrado];
+  let best = null;
+  for(const perm of permutations(boxDims)){
+    const diffs = [Math.abs(perm[0]-target[0]), Math.abs(perm[1]-target[1]), Math.abs(perm[2]-target[2])];
+    const total = diffs[0]+diffs[1]+diffs[2];
+    if(best === null || total < best.total){
+      best = {total, perm, diffs};
+    }
+  }
+  return best;
+}
+
+function fmt(n){
+  if(n === null || n === undefined) return '—';
+  return Number.isInteger(n) ? n.toString() : n.toFixed(1);
+}
+
+function render(target){
+  const resultsEl = document.getElementById('results');
+  if(!target){
+    resultsEl.innerHTML = '<div class="empty">Introduce las tres medidas de tu producto y pulsa <b>Buscar caja</b> para encontrar la caja que mejor encaja.</div>';
+    return;
+  }
+
+  const scored = BOXES.map(box=>{
+    const m = bestMatch(box, target);
+    return {box, ...m};
+  }).sort((a,b)=>a.total-b.total);
+
+  const top = scored.slice(0, 12);
+
+  let html = `<div class="results-count">${scored.filter(s=>s.total===0).length} coincidencia(s) exacta(s) &middot; mostrando las 12 más cercanas</div>`;
+
+  for(const s of top){
+    const b = s.box;
+    const isExact = s.total === 0;
+    const [dA, dL, dH] = s.diffs;
+    const [pA, pL, pH] = s.perm;
+    html += `
+    <div class="card ${isExact ? 'exact' : ''}">
+      <div class="card-main">
+        <div class="card-code">Código ${b.codigo ?? '—'}</div>
+        <div class="card-name">${b.modelo ?? 'Sin nombre'}</div>
+        <div class="card-tags">
+          ${b.calidad ? `<span class="tag">Calidad ${b.calidad}</span>` : ''}
+          ${b.tipologia ? `<span class="tag">Tipo ${b.tipologia}</span>` : ''}
+          ${b.impresion && b.impresion !== 'No' ? `<span class="tag">${b.impresion}</span>` : ''}
+        </div>
+      </div>
+      <div class="card-dims">
+        <div class="dim-row"><span class="lbl">Ancho</span><span class="right"><span class="val">${fmt(pA)} mm</span>${dA>0?`<span class="diff">±${fmt(dA)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+        <div class="dim-row"><span class="lbl">Largo</span><span class="right"><span class="val">${fmt(pL)} mm</span>${dL>0?`<span class="diff">±${fmt(dL)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+        <div class="dim-row"><span class="lbl">Alto</span><span class="right"><span class="val">${fmt(pH)} mm</span>${dH>0?`<span class="diff">±${fmt(dH)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+      </div>
+    </div>`;
+  }
+
+  resultsEl.innerHTML = html;
+}
+
+document.getElementById('search-btn').addEventListener('click', ()=>{
+  const a = parseFloat(document.getElementById('in-ancho').value);
+  const l = parseFloat(document.getElementById('in-largo').value);
+  const h = parseFloat(document.getElementById('in-alto').value);
+  if(isNaN(a) || isNaN(l) || isNaN(h)){
+    alert('Introduce las tres medidas (ancho, largo y alto).');
+    return;
+  }
+  const factor = unit === 'cm' ? 10 : 1;
+  render([a*factor, l*factor, h*factor]);
+});
+
+['in-ancho','in-largo','in-alto'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') document.getElementById('search-btn').click();
+  });
+});
+
+render(null);
+</script>
+</body>
+</html>
+
