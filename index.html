@@ -509,6 +509,7 @@ document.getElementById('unit-toggle').addEventListener('click', (e)=>{
   if(!btn) return;
   unit = btn.dataset.unit;
   document.querySelectorAll('#unit-toggle button').forEach(b=>b.classList.toggle('active', b===btn));
+  if(lastTarget) render(lastTarget);
 });
 
 document.getElementById('impresion-toggle').addEventListener('click', (e)=>{
@@ -577,11 +578,18 @@ function render(target){
 
   let html = `<div class="results-count">${scored.filter(s=>s.total===0).length} coincidencia(s) exacta(s) &middot; mostrando las ${top.length} más cercanas</div>`;
 
+  const displayFactor = unit === 'cm' ? 10 : 1;
+  const dispUnit = unit;
+  const fmtDisp = (mmVal)=> fmt(mmVal / displayFactor);
+
   for(const s of top){
     const b = s.box;
     const isExact = s.total === 0;
     const [dA, dL, dH] = s.diffs;
     const [pA, pL, pH] = s.perm;
+    const signA = pA > target[0] ? '+' : '-';
+    const signL = pL > target[1] ? '+' : '-';
+    const signH = pH > target[2] ? '+' : '-';
     html += `
     <div class="card ${isExact ? 'exact' : ''}">
       <div class="card-main">
@@ -594,9 +602,9 @@ function render(target){
         </div>
       </div>
       <div class="card-dims">
-        <div class="dim-row"><span class="lbl">Ancho</span><span class="right"><span class="val">${fmt(pA)} mm</span>${dA>0?`<span class="diff">+${fmt(dA)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
-        <div class="dim-row"><span class="lbl">Largo</span><span class="right"><span class="val">${fmt(pL)} mm</span>${dL>0?`<span class="diff">+${fmt(dL)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
-        <div class="dim-row"><span class="lbl">Alto</span><span class="right"><span class="val">${fmt(pH)} mm</span>${dH>0?`<span class="diff">+${fmt(dH)} mm</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+        <div class="dim-row"><span class="lbl">Ancho</span><span class="right"><span class="val">${fmtDisp(pA)} ${dispUnit}</span>${dA>0?`<span class="diff">${signA}${fmtDisp(dA)} ${dispUnit}</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+        <div class="dim-row"><span class="lbl">Largo</span><span class="right"><span class="val">${fmtDisp(pL)} ${dispUnit}</span>${dL>0?`<span class="diff">${signL}${fmtDisp(dL)} ${dispUnit}</span>`:`<span class="diff zero">exacto</span>`}</span></div>
+        <div class="dim-row"><span class="lbl">Alto</span><span class="right"><span class="val">${fmtDisp(pH)} ${dispUnit}</span>${dH>0?`<span class="diff">${signH}${fmtDisp(dH)} ${dispUnit}</span>`:`<span class="diff zero">exacto</span>`}</span></div>
       </div>
     </div>`;
   }
